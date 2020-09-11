@@ -23,11 +23,11 @@ def main():
     else:
         sess.run(tf.initialize_all_variables())
 
-    result_step = np.arange(0, 10000, 100)
-    result_acc = np.zeros(100)
-    result_loss = np.zeros(100)
-    result_test = np.zeros(100)
-    for i in range(10001):
+    result_step = np.arange(0, 50000, 100)
+    result_acc = np.zeros(500)
+    result_loss = np.zeros(500)
+    result_test = np.zeros(500)
+    for i in range(50001):
         batch = mnist.train.next_batch(50)
         if i % 100 == 0:
             r = int(i / 100 - 1)
