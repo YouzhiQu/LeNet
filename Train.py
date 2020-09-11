@@ -5,7 +5,8 @@ import config as cfg
 import os
 import lenet
 from lenet import Lenet
-
+import numpy as np
+import matplotlib.pyplot as plt
 
 def main():
     mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -22,22 +23,35 @@ def main():
     else:
         sess.run(tf.initialize_all_variables())
 
-    for i in range(20000):
+    result_step = np.arange(0, 10000, 100)
+    result_acc = np.zeros(100)
+    result_loss = np.zeros(100)
+    result_test = np.zeros(100)
+    for i in range(10001):
         batch = mnist.train.next_batch(50)
         if i % 100 == 0:
-            train_accuracy = sess.run(lenet.train_accuracy,feed_dict={
-                lenet.raw_input_image: batch[0],lenet.raw_input_label: batch[1]
-            })
-            train_loss = sess.run(lenet.loss, feed_dict={
+            r = int(i / 100 - 1)
+            result_acc[r] = sess.run(lenet.train_accuracy,feed_dict={
                 lenet.raw_input_image: batch[0], lenet.raw_input_label: batch[1]
             })
-            print("step %d, training accuracy %g, training loss %g" % (i, train_accuracy, train_loss))
+            result_loss[r] = sess.run(lenet.loss, feed_dict={
+                lenet.raw_input_image: batch[0], lenet.raw_input_label: batch[1]
+            })
+            print("step %d, training accuracy %g, training loss %g" % (i, result_acc[r], result_loss[r]))
+            result_test[r] = sess.run(lenet.train_accuracy, feed_dict={
+                lenet.raw_input_image: mnist.test.images, lenet.raw_input_label: mnist.test.labels
+            })
+            print("test accuracy %g" % (result_test[r]))
+
         sess.run(lenet.train_op,feed_dict={lenet.raw_input_image: batch[0],lenet.raw_input_label: batch[1]})
     save_path = saver.save(sess, parameter_path)
-    test_accuracy = sess.run(lenet.train_accuracy, feed_dict={
-        lenet.raw_input_image: mnist.test.images, lenet.raw_input_label: mnist.test.labels
-    })
-    print("test accuracy %g" % (test_accuracy))
+    plt.plot(result_step, result_acc, label='training accuracy')
+    plt.plot(result_step, result_test, label='test accuracy')
+    plt.title('Lenet')
+    plt.xlabel('step')
+    plt.ylabel('accuracy')
+    plt.legend()
+    plt.show()
 if __name__ == '__main__':
     main()
 
