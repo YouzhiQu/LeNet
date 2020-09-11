@@ -6,3 +6,5 @@ Some modifications here
 3. Applied dropout in the FC layer.
 
 This net can get 99.1% correct rate on MNIST test set.
+
+09/2020 update train.py, add test accuracy and you can plot training accuracy and test accuracy.
