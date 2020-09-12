@@ -47,7 +47,7 @@ def main():
     save_path = saver.save(sess, parameter_path)
     plt.plot(result_step, result_acc, label='training accuracy')
     plt.plot(result_step, result_test, label='test accuracy')
-    plt.title('Lenet')
+    plt.title('LeNet')
     plt.xlabel('step')
     plt.ylabel('accuracy')
     plt.legend()
